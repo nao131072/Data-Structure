@@ -108,15 +108,16 @@ int main()
 
 RBTree::node* RBTree::insert(int value)
 {
-    node* searchResult=RBTree::search(value);
+    node* searchResult=RBTree::search(value, true);
     // cout<<"search done"<<endl;
-    if(searchResult->value==value) return NULL;
+    // if(searchResult->value==value) return NULL;
     node *newnode=new node;
     newnode->value=value;
     if(value<searchResult->value) RBTree::setKid(searchResult, newnode, RBTree::side::left);
     else RBTree::setKid(searchResult, newnode, RBTree::side::right);
     RBTree::search(value, false);
     if(RBTree::root->color==1) RBTree::root->color=0;
+    return newnode;
 }
 
 RBTree::node* RBTree::search(int key, bool first)
@@ -187,6 +188,7 @@ bool RBTree::consequentRed(node *root)
 
 RBTree::node* RBTree::rotate(node* mid)
 {
+    this->rotationCount++;
     if(mid->side==0)
     {
         //LL
@@ -251,15 +253,12 @@ RBTree::node* RBTree::rotate(node* mid)
             RBTree::setKid(up->parent, mid, up->side);
             RBTree::setKid(mid, up, RBTree::side::left);
             mid->color=0;
-            // cout<<"mid->left: "<<mid->left->value<<endl;
             if(mid->left!=NULL)
                 mid->left->color=1;
-            // cout<<"mid->right: "<<mid->right->value<<endl;
             if(mid->right!=NULL)
                 mid->right->color=1;
         }
     }
-    this->rotationCount++;
     return mid;
 }
 
